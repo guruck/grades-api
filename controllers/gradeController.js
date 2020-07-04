@@ -1,10 +1,14 @@
 import { db } from '../models/index.js';
 import { logger } from '../config/logger.js';
 
+const GradeStudent = db.model;
+
 const create = async (req, res) => {
   try {
-    res.send();
-    logger.info(`POST /grade - ${JSON.stringify()}`);
+    const student = new GradeStudent(req.body);
+    await student.save();
+    res.send(student);
+    logger.info(`POST /grade - ${JSON.stringify(student)}`);
   } catch (error) {
     res
       .status(500)
@@ -22,7 +26,8 @@ const findAll = async (req, res) => {
     : {};
 
   try {
-    res.send();
+    const student = await GradeStudent.find(condition);
+    res.send(student);
     logger.info(`GET /grade`);
   } catch (error) {
     res
@@ -36,7 +41,8 @@ const findOne = async (req, res) => {
   const id = req.params.id;
 
   try {
-    res.send();
+    const student = await GradeStudent.findOne({ _id: id });
+    res.send(student);
 
     logger.info(`GET /grade - ${id}`);
   } catch (error) {
@@ -55,7 +61,12 @@ const update = async (req, res) => {
   const id = req.params.id;
 
   try {
-    res.send({ message: 'Grade atualizado com sucesso' });
+    const student = await GradeStudent.findOneAndUpdate({ _id: id }, req.body, {
+      new: true,
+    });
+
+    // res.send({ message: 'Grade atualizado com sucesso' });
+    res.send(student);
 
     logger.info(`PUT /grade - ${id} - ${JSON.stringify(req.body)}`);
   } catch (error) {
@@ -66,11 +77,16 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   const id = req.params.id;
-
+  logger.info(`DELETE /grade - ${id}`);
   try {
-    res.send({ message: 'Grade excluido com sucesso' });
-
-    logger.info(`DELETE /grade - ${id}`);
+    const data = await GradeStudent.findByIdAndRemove({ _id: id });
+    if (!data) {
+      res.send(`Podcast id ${id} nao encontrado`);
+      logger.info(`grade - ${id} nao encontrado`);
+    } else {
+      res.send({ message: 'Grade excluido com sucesso' });
+      logger.info(`DELETE /grade - ${id} sucessfuly`);
+    }
   } catch (error) {
     res
       .status(500)
@@ -80,11 +96,10 @@ const remove = async (req, res) => {
 };
 
 const removeAll = async (req, res) => {
-  const id = req.params.id;
-
   try {
+    const data = await GradeStudent.remove({});
     res.send({
-      message: `Grades excluidos`,
+      message: `Grades excluidos ${data}`,
     });
     logger.info(`DELETE /grade`);
   } catch (error) {
