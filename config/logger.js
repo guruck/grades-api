@@ -1,5 +1,6 @@
 import winston from 'winston';
 import winstondb from 'winston-mongodb';
+import { db } from '../models/index.js';
 
 const { combine, timestamp, label, printf } = winston.format;
 
@@ -14,7 +15,7 @@ const logger = createLogger({
     new transports.Console(),
     new transports.MongoDB({
       level: 'info',
-      db: process.env.MONGODB,
+      db: db.url,
       collection: 'logs_grades',
       capped: true,
       cappedMax: 20,
