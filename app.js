@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: 'http://localhost:5000',
+    origin: `${process.env.APPCORURL}:${process.env.APPCORPORT}`,
     // origin: 'http://peaceful-death-valley-46839.herokuapp.com/',
   })
 );
