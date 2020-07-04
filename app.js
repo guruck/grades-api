@@ -29,12 +29,13 @@ let porta = parseInt(process.env.APPCORPORT);
 let url = process.env.APPCORURL;
 if (porta !== 0) url = `${process.env.APPCORURL}:${process.env.APPCORPORT}`;
 app.use(
+  gradeRouter,
   cors({
     origin: url,
   })
 );
 
-app.use(gradeRouter);
+// app.use(gradeRouter);
 
 app.get('/', (req, res) => {
   res.send('API em execucao');
