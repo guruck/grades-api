@@ -25,10 +25,12 @@ const app = express();
 //define o dominio de origem para consumo do servico
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+let porta = parseInt(process.env.APPCORPORT);
+let url = process.env.APPCORURL;
+if (porta !== 0) url = `${process.env.APPCORURL}:${process.env.APPCORPORT}`;
 app.use(
   cors({
-    // origin: `${process.env.APPCORURL}:${process.env.APPCORPORT}`,
-    origin: 'https://peaceful-death-valley-46839.herokuapp.com/',
+    origin: url,
   })
 );
 
