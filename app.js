@@ -28,14 +28,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 let porta = parseInt(process.env.APPCORPORT);
 let url = process.env.APPCORURL;
 if (porta !== 0) url = `${process.env.APPCORURL}:${process.env.APPCORPORT}`;
-app.use(
-  gradeRouter,
-  cors({
-    origin: url,
-  })
-);
 
-// app.use(gradeRouter);
+let corsOptions = {
+  origin: url,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+};
+app.use(cors(corsOptions));
+
+app.use(gradeRouter);
 
 app.get('/', (req, res) => {
   res.send('API em execucao');
